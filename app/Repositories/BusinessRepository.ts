@@ -30,24 +30,26 @@ export default class BusinessRepository {
   }
 
   async getAll(filters: any) {
-    const q = filters.q
-    const sort = filters.sort ?? null
+    let {
+      q,
+      owner_id: ownerId,
+      sort_by: sortBy = 'id',
+      sort_direction: sortDirection = 'desc',
+    } = filters
 
     let queryModel = Business.query().preload('owner')
 
-    if(sort){
-      const [key, direction]: any = Object.entries(sort)[0];
-      queryModel.orderBy(key, direction)
-    }else{
-      queryModel.orderBy('id', 'desc')
-    }
-
     if(q){
-      queryModel
-        .where('name', 'LIKE', '%' + q + '%')
+      queryModel.where('name', 'LIKE', '%' + q + '%')
     }
 
-    return await queryModel.paginate(filters.page, filters.limit)
+    if(ownerId){
+      queryModel.where('owner_id', ownerId)
+    }
+
+    return await queryModel
+      .orderBy(sortBy, sortDirection)
+      .paginate(filters.page, filters.limit)
   }
 
   async getById(uuid: string) {

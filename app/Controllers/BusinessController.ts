@@ -10,6 +10,7 @@ import UpdateBusinessRequest from 'App/Validators/Business/UpdateBusinessRequest
 import DeleteBusinessRequest from 'App/Validators/Business/DeleteBusinessRequest'
 import UserRepository from 'App/Repositories/UserRepository'
 import GeneralConstants from 'App/Constants/GeneralConstants'
+import RegisterBusinessWithOwnerRequest from 'App/Validators/Business/RegisterBusinessWithOwnerRequest'
 
 export default class BusinessController {
   private businessRepo: BusinessRepository
@@ -21,9 +22,12 @@ export default class BusinessController {
   }
 
   // @ts-ignore
-  public async index({ request, response, transform }: HttpContextContract) {
+  public async index({ auth, request, response, transform }: HttpContextContract) {
+    const userAuthData = auth.use('api').user!
+
     const list = await this.businessRepo.getAll({
       q: request.input('q', null),
+      owner_id: userAuthData?.uuid,
       page: request.input('page', 1),
       limit: request.input('limit', 25)
     })
@@ -47,29 +51,15 @@ export default class BusinessController {
   }
 
   // @ts-ignore
-  public async store({ request, response, transform }: HttpContextContract) {
+  public async store({ auth, request, response, transform }: HttpContextContract) {
     await request.validate(CreateBusinessRequest)
 
-    let businessPayload = request.only([
-      'name', 'description', 'location', 'photo_url'
-    ])
-
-    let userPayload = request.only(['email', 'firstname', 'lastname', 'mobile', 'password'])
-    userPayload['profile_type'] = GeneralConstants.ROLE_TYPES.BUSINESS_ADMIN
-    userPayload['status'] = GeneralConstants.GENERAL_STATUS_TYPES.ACTIVE
-
-    const createdUser = await this.userRepo.add(userPayload)
-    const userId = createdUser.uuid
-
-    businessPayload['owner_id'] = userId
+    const userAuthData = auth.use('api').user!
+    let businessPayload = request.only(['name', 'type'])
+    businessPayload['owner_id'] = userAuthData?.uuid
 
     const createdBusiness = await this.businessRepo.add(businessPayload)
     const businessId = createdBusiness.uuid
-
-    await this.userRepo.update(userId, {
-      'business_id': businessId,
-      'updated_at': DateFormatterHelper.getCurrentTimestamp()
-    })
 
     const data = await this.businessRepo.getById(businessId)
     const transformed = await transform.item(data, BusinessTransformer)
@@ -85,19 +75,11 @@ export default class BusinessController {
     const businessId = params.id
     const currentTimestamp = DateFormatterHelper.getCurrentTimestamp()
 
-    let businessPayload = request.only([
-      'name', 'description', 'location', 'photo_url'
-    ])
-
-    let userPayload = request.only(['email', 'firstname', 'lastname', 'mobile'])
-    userPayload['updated_at'] = currentTimestamp
-
+    let businessPayload = request.only(['name', 'type'])
     businessPayload['updated_at'] = currentTimestamp
     await this.businessRepo.update(businessId, businessPayload)
 
     const data = await this.businessRepo.getById(businessId)
-
-    await this.userRepo.update(data.owner_id, userPayload)
     const transformed = await transform.item(data, BusinessTransformer)
     const serialized = JSONSerializerHelper.serialize(Business.table, null, transformed)
 
@@ -108,18 +90,6 @@ export default class BusinessController {
     await request.validate(DeleteBusinessRequest)
 
     const businessId = params.id
-    const isExists: boolean = await this.userRepo.isExistsByBusinessId(businessId)
-
-    if(!isExists){
-      return response.badRequest({
-        code: 400,
-        message: 'Unable to delete business due to attached business admin(s).'
-      })
-    }
-
-    await this.userRepo.updateByBusinessId(businessId, {
-      'business_id': null
-    })
     await this.businessRepo.delete(businessId)
 
     return response.status(204).json(null)
@@ -127,7 +97,7 @@ export default class BusinessController {
 
   // @ts-ignore
   public async publicStore({ request, response, transform }: HttpContextContract) {
-    await request.validate(CreateBusinessRequest)
+    await request.validate(RegisterBusinessWithOwnerRequest)
 
     let businessPayload = request.only(['name', 'type'])
     let userPayload = request.only(['firstname', 'lastname', 'email', 'password'])

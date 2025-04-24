@@ -1,6 +1,7 @@
 import {rules, schema} from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Business from 'App/Models/Business';
+import GeneralConstants from 'App/Constants/GeneralConstants';
 
 export default class UpdateBusinessRequest {
   constructor (protected ctx: HttpContextContract) {
@@ -21,28 +22,15 @@ export default class UpdateBusinessRequest {
         }
       })
     ]),
-    description: schema.string.optional({ trim: true, escape: true }, [
-      rules.maxLength(500)
-    ]),
-    location: schema.string.optional({ trim: true, escape: true }, [
-      rules.maxLength(200)
-    ]),
-    photo_url: schema.string.optional({ trim: true, escape: true }, [
-      rules.maxLength(500)
-    ]),
-    email: schema.string.optional({ trim: true, escape: true }, [
-      rules.email(),
-      rules.maxLength(50)
-    ]),
-    mobile: schema.string.optional({ trim: true, escape: true }, [
-      rules.maxLength(50)
-    ]),
-    firstname: schema.string.optional({ trim: true, escape: true }, [
-      rules.maxLength(50)
-    ]),
-    lastname: schema.string.optional({ trim: true, escape: true }, [
-      rules.maxLength(50)
-    ])
+    type: schema.enum.optional([
+      GeneralConstants.STORE_TYPES.RETAIL,
+      GeneralConstants.STORE_TYPES.FOOD_STALL,
+      GeneralConstants.STORE_TYPES.EATERY,
+      GeneralConstants.STORE_TYPES.GROCERY,
+      GeneralConstants.STORE_TYPES.KIOSK,
+      GeneralConstants.STORE_TYPES.MARKET_VENDOR,
+      GeneralConstants.STORE_TYPES.OTHER
+    ] as const)
   })
 
   public messages = {
@@ -50,13 +38,6 @@ export default class UpdateBusinessRequest {
     'params.id.exists': 'Business ID does not exist',
     'name.required': 'Business Name is required',
     'name.unique': 'Business Name already exist',
-    'description.maxLength': 'Description max length is 500',
-    'location.maxLength': 'Location max length is 200',
-    'photo_url.maxLength': 'Photo URL max length is 500',
-    'email.email': 'Email must be a valid format',
-    'email.maxLength': 'Email max length is 50',
-    'mobile.maxLength': 'Mobile Number max length is 50',
-    'firstname.maxLength': 'Firstname max length is 50',
-    'lastname.maxLength': 'Lastname max length is 50'
+    'type.enum': 'Type must be in {{ options.choices }}',
   }
 }
