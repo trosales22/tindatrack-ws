@@ -17,6 +17,9 @@ export default class RegisterBusinessAdminRequest {
       rules.email(),
       rules.maxLength(50)
     ]),
+    username: schema.string({ trim: true, escape: true }, [
+      rules.unique({table: User.table, column: 'username', caseInsensitive: true})
+    ]),
     password: schema.string({ trim: true, escape: true }, [
       rules.minLength(8),
       rules.maxLength(16)
@@ -32,6 +35,8 @@ export default class RegisterBusinessAdminRequest {
     'email.unique': 'Email already exist',
     'email.email': 'Email must be a valid format',
     'email.maxLength': 'Email max length is 50',
+    'username.required': 'Username is required',
+    'username.unique': 'Username already exist',
     'password.required': 'Password is required',
     'password.minLength': 'Password must be atleast 8 characters',
     'password.maxLength': 'Password max length is 16'

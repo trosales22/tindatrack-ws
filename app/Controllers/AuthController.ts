@@ -125,7 +125,7 @@ export default class AuthController {
   public async businessAdminStore({ auth, request, response }: HttpContextContract) {
     await request.validate(RegisterBusinessAdminRequest)
 
-    let payload = request.only(['email', 'firstname', 'lastname', 'password'])
+    let payload = request.only(['email', 'username', 'firstname', 'lastname', 'password'])
     const role = GeneralConstants.ROLE_TYPES.BUSINESS_ADMIN
     payload['profile_type'] = role
 
