@@ -31,8 +31,7 @@ export default class RegisterBusinessWithOwnerRequest {
     ]),
     password: schema.string({ trim: true, escape: true }, [
       rules.minLength(8),
-      rules.maxLength(16),
-      rules.confirmed()
+      rules.maxLength(16)
     ])
   })
 
@@ -54,7 +53,6 @@ export default class RegisterBusinessWithOwnerRequest {
     'lastname.maxLength': 'Lastname max length is 50',
     'password.required': 'Password is required',
     'password.minLength': 'Password must be atleast 8 characters',
-    'password.maxLength': 'Password max length is 16',
-    'password_confirmation.confirmed': "Password confirmation doesn't match."
+    'password.maxLength': 'Password max length is 16'
   }
 }
