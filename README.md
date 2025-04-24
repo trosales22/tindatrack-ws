@@ -3,7 +3,6 @@
 ## Stack
 - Adonis5 (TypeScript)
 - MySQL
-- Firebase
 
 ## Setup
 - Run `npm install`
