@@ -27,6 +27,26 @@ export default class GeneralConstants {
     [this.GENERAL_STATUS_TYPES.INACTIVE]: 'Inactive',
   }
 
+  public static STORE_TYPES = {
+    RETAIL: 'retail',
+    FOOD_STALL: 'food_stall',
+    EATERY: 'eatery',
+    GROCERY: 'grocery',
+    KIOSK: 'kiosk',
+    MARKET_VENDOR: 'market_vendor',
+    OTHER: 'other'
+  }
+
+  public static STORE_TYPE_LABELS = {
+    [this.STORE_TYPES.RETAIL]: 'Retail Store',
+    [this.STORE_TYPES.FOOD_STALL]: 'Food Stall / Vendor',
+    [this.STORE_TYPES.EATERY]: 'Eatery / Carinderia',
+    [this.STORE_TYPES.GROCERY]: 'Grocery / Mini Mart',
+    [this.STORE_TYPES.KIOSK]: 'Kiosk',
+    [this.STORE_TYPES.MARKET_VENDOR]: 'Market Vendor',
+    [this.STORE_TYPES.OTHER]: 'Other'
+  }
+
   public static PRODUCT_CATEGORIES = {
     SNACKS: 'snacks',
     BEVERAGES: 'beverages',

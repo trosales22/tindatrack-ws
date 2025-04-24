@@ -129,11 +129,8 @@ export default class BusinessController {
   public async publicStore({ request, response, transform }: HttpContextContract) {
     await request.validate(CreateBusinessRequest)
 
-    let businessPayload = request.only([
-      'name', 'description', 'location', 'photo_url'
-    ])
-
-    let userPayload = request.only(['email', 'firstname', 'lastname', 'mobile', 'password'])
+    let businessPayload = request.only(['name', 'type'])
+    let userPayload = request.only(['firstname', 'lastname', 'email', 'password'])
     userPayload['profile_type'] = GeneralConstants.ROLE_TYPES.BUSINESS_ADMIN
     userPayload['status'] = GeneralConstants.GENERAL_STATUS_TYPES.ACTIVE
 
@@ -144,11 +141,6 @@ export default class BusinessController {
 
     const createdBusiness = await this.businessRepo.add(businessPayload)
     const businessId = createdBusiness.uuid
-
-    await this.userRepo.update(userId, {
-      'business_id': businessId,
-      'updated_at': DateFormatterHelper.getCurrentTimestamp()
-    })
 
     const data = await this.businessRepo.getById(businessId)
     const transformed = await transform.item(data, BusinessTransformer)

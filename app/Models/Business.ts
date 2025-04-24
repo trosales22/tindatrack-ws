@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { BaseModel, beforeCreate, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import GeneralConstants from 'App/Constants/GeneralConstants'
 import User from './User'
-import slugify from 'slugify'
 
 export default class Business extends BaseModel {
   public static table = 'businesses'
@@ -27,17 +26,11 @@ export default class Business extends BaseModel {
   @column({ serializeAs: 'name', columnName: 'name' })
   public name: string
 
-  @column({ serializeAs: 'slug', columnName: 'slug' })
-  public slug: string
+  @column({ serializeAs: 'type', columnName: 'type' })
+  public type: string
 
-  @column({ serializeAs: 'description', columnName: 'description' })
-  public description: string
-
-  @column({ serializeAs: 'location', columnName: 'location' })
-  public location: string
-
-  @column({ serializeAs: 'photo_url', columnName: 'photo_url' })
-  public photoUrl: string
+  @column({ serializeAs: 'status', columnName: 'status' })
+  public status: string
 
   @column.dateTime({
     serializeAs: 'created_at',
@@ -61,20 +54,6 @@ export default class Business extends BaseModel {
   @beforeCreate()
   public static setId(business: Business) {
     business.uuid = uuidv4()
-  }
-
-  @beforeCreate()
-  public static async generateSlug(business: Business) {
-    let slug = slugify(business.name, {
-      lower: true
-    })
-    const exists = await Business.query().where('slug', slug).first()
-
-    if (exists) {
-      slug = `${slug}-${Math.floor(1000 + Math.random() * 9000)}`
-    }
-
-    business.slug = slug
   }
 
   @belongsTo(() => User, {
