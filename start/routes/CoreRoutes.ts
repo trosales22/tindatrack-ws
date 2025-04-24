@@ -10,6 +10,8 @@ export const CoreRoutes = () => [
     Route.get('my_profile', async (ctx) => { return new AuthController().myProfile(ctx)}).middleware(['auth:api'])
     Route.put('my_profile', async (ctx) => { return new AuthController().updateProfile(ctx)}).middleware(['auth:api'])
 
+    Route.post('business_admin/register', async (ctx) => {return new AuthController().businessAdminStore(ctx)})
+
     BusinessRoutes()
   }).prefix('core')
 ]

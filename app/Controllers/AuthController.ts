@@ -8,6 +8,7 @@ import ChangePasswordRequest from 'App/Validators/ChangePasswordRequest'
 import UpdateProfileRequest from 'App/Validators/UpdateProfileRequest'
 import UserRepository from 'App/Repositories/UserRepository'
 import DateFormatterHelper from 'App/Helpers/DateFormatterHelper'
+import RegisterBusinessAdminRequest from 'App/Validators/RegisterBusinessAdminRequest'
 
 export default class AuthController {
   private userRepo: UserRepository
@@ -118,6 +119,39 @@ export default class AuthController {
     return response.json({
       code: 200,
       message: 'Profile updated successfully.'
+    })
+  }
+
+  public async businessAdminStore({ auth, request, response }: HttpContextContract) {
+    await request.validate(RegisterBusinessAdminRequest)
+
+    let payload = request.only(['email', 'firstname', 'lastname', 'password'])
+    const role = GeneralConstants.ROLE_TYPES.BUSINESS_ADMIN
+    payload['profile_type'] = role
+
+    await this.userRepo.add(payload)
+
+    const userData = await User.query()
+      .where('profile_type', role)
+      .where('email', payload.email)
+      .firstOrFail()
+
+    const accessToken = await auth.use('api').generate(userData, {
+      name: GeneralHelper.generateAccessTokenLabel(role),
+      expiresIn: GeneralConstants.SESSION_EXPIRY,
+    })
+
+    return response.json({
+      message: 'Successfully registered as business admin.',
+      access_token: accessToken,
+      details: {
+        email: userData.email,
+        username: userData.username,
+        firstname: userData.firstName,
+        lastname: userData.lastName,
+        phone_number: userData.mobile,
+        role: role
+      },
     })
   }
 }
