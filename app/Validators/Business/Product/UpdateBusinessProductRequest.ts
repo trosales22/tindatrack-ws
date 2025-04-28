@@ -59,7 +59,7 @@ export default class UpdateBusinessProductRequest {
     status: schema.enum.optional([
       GeneralConstants.GENERAL_STATUS_TYPES.ACTIVE,
       GeneralConstants.GENERAL_STATUS_TYPES.INACTIVE
-    ] as const),
+    ] as const)
   })
 
   public messages = {

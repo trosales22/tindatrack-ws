@@ -18,6 +18,10 @@ export default class CreateBusinessRequest {
       GeneralConstants.STORE_TYPES.KIOSK,
       GeneralConstants.STORE_TYPES.MARKET_VENDOR,
       GeneralConstants.STORE_TYPES.OTHER
+    ] as const),
+    status: schema.enum([
+      GeneralConstants.GENERAL_STATUS_TYPES.ACTIVE,
+      GeneralConstants.GENERAL_STATUS_TYPES.INACTIVE
     ] as const)
   })
 
@@ -25,6 +29,8 @@ export default class CreateBusinessRequest {
     'name.required': 'Business Name is required',
     'name.unique': 'Business Name already exist',
     'type.required': 'Type is required',
-    'type.enum': 'Type must be in {{ options.choices }}'
+    'type.enum': 'Type must be in {{ options.choices }}',
+    'status.required': 'Status is required',
+    'status.enum': 'Status must be in {{ options.choices }}'
   }
 }

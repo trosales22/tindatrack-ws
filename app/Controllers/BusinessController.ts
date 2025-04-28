@@ -55,10 +55,10 @@ export default class BusinessController {
     await request.validate(CreateBusinessRequest)
 
     const userAuthData = auth.use('api').user!
-    let businessPayload = request.only(['name', 'type'])
-    businessPayload['owner_id'] = userAuthData?.uuid
+    let payload = request.only(['name', 'type', 'status'])
+    payload['owner_id'] = userAuthData?.uuid
 
-    const createdBusiness = await this.businessRepo.add(businessPayload)
+    const createdBusiness = await this.businessRepo.add(payload)
     const businessId = createdBusiness.uuid
 
     const data = await this.businessRepo.getById(businessId)
@@ -75,9 +75,9 @@ export default class BusinessController {
     const businessId = params.id
     const currentTimestamp = DateFormatterHelper.getCurrentTimestamp()
 
-    let businessPayload = request.only(['name', 'type'])
-    businessPayload['updated_at'] = currentTimestamp
-    await this.businessRepo.update(businessId, businessPayload)
+    let payload = request.only(['name', 'type', 'status'])
+    payload['updated_at'] = currentTimestamp
+    await this.businessRepo.update(businessId, payload)
 
     const data = await this.businessRepo.getById(businessId)
     const transformed = await transform.item(data, BusinessTransformer)

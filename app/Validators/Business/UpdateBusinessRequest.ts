@@ -30,7 +30,11 @@ export default class UpdateBusinessRequest {
       GeneralConstants.STORE_TYPES.KIOSK,
       GeneralConstants.STORE_TYPES.MARKET_VENDOR,
       GeneralConstants.STORE_TYPES.OTHER
-    ] as const)
+    ] as const),
+    status: schema.enum.optional([
+      GeneralConstants.GENERAL_STATUS_TYPES.ACTIVE,
+      GeneralConstants.GENERAL_STATUS_TYPES.INACTIVE
+    ] as const),
   })
 
   public messages = {
@@ -39,5 +43,6 @@ export default class UpdateBusinessRequest {
     'name.required': 'Business Name is required',
     'name.unique': 'Business Name already exist',
     'type.enum': 'Type must be in {{ options.choices }}',
+    'status.enum': 'Status must be in {{ options.choices }}'
   }
 }
