@@ -5,13 +5,23 @@ import DateFormatterHelper from 'App/Helpers/DateFormatterHelper'
 export default class BusinessProductTransformer extends TransformerAbstract {
   public async transform(model: any) {
     const business = model.business
+    const inventory = model.inventory
     let businessArr: any = null
+    let inventoryArr: any = null
 
     if(business){
       businessArr = {
         id: business.uuid,
         name: business.name,
         type: business.type
+      }
+    }
+
+    if(inventory){
+      inventoryArr = {
+        stock: inventory.stock || 0,
+        created_at: DateFormatterHelper.formatDate(inventory.created_at),
+        updated_at: DateFormatterHelper.formatDate(inventory.updated_at)
       }
     }
 
@@ -32,6 +42,7 @@ export default class BusinessProductTransformer extends TransformerAbstract {
         label: GeneralConstants.GENERAL_STATUS_LABELS[status] ?? status
       },
       business: businessArr,
+      inventory: inventoryArr,
       created_at: DateFormatterHelper.formatDate(model.created_at),
       updated_at: DateFormatterHelper.formatDate(model.updated_at)
     }

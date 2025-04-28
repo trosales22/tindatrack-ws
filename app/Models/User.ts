@@ -42,9 +42,6 @@ export default class User extends BaseModel {
   @column({ serializeAs: 'profile_type', columnName: 'profile_type' })
   public profileType: string
 
-  @column({ serializeAs: 'business_id', columnName: 'business_id' })
-  public businessId: string
-
   @column({ serializeAs: 'status', columnName: 'status' })
   public status: string
 

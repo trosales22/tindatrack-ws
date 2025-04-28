@@ -64,18 +64,6 @@ export default class BusinessRepository {
     )
   }
 
-  async getBySlug(slug: string) {
-    return Business.query().preload('owner')
-      .where('slug', slug)
-      .firstOrFail()
-      .then((res) => {
-        return res.serialize()
-      }, (err) => {
-        throw new NotFoundException('business', err.message)
-      }
-    )
-  }
-
   async delete(uuid: string) {
     return await Business.query().delete().where('uuid', uuid).then(
       (deleted) => {

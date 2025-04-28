@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
 import { v4 as uuidv4 } from 'uuid'
-import { BaseModel, beforeCreate, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeCreate, BelongsTo, belongsTo, column, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
 import GeneralConstants from 'App/Constants/GeneralConstants'
 import Business from './Business'
+import BusinessInventory from './BusinessInventory'
 
 export default class BusinessProduct extends BaseModel {
   public static table = 'business_products'
@@ -75,4 +76,10 @@ export default class BusinessProduct extends BaseModel {
     foreignKey: 'businessId'
   })
   public business: BelongsTo<typeof Business>
+
+  @hasOne(() => BusinessInventory, {
+    localKey: 'uuid',
+    foreignKey: 'productId'
+  })
+  public inventory: HasOne<typeof BusinessInventory>
 }

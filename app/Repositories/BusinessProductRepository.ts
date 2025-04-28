@@ -37,7 +37,9 @@ export default class BusinessProductRepository {
       sort_direction: sortDirection = 'desc',
     } = filters
 
-    let queryModel = BusinessProduct.query().preload('business')
+    let queryModel = BusinessProduct.query()
+      .preload('business')
+      .preload('inventory')
 
     if(q){
       queryModel.where('name', 'LIKE', '%' + q + '%')
@@ -53,20 +55,8 @@ export default class BusinessProductRepository {
   }
 
   async getById(uuid: string) {
-    return BusinessProduct.query().preload('business')
+    return BusinessProduct.query().preload('business').preload('inventory')
       .where('uuid', uuid)
-      .firstOrFail()
-      .then((res) => {
-        return res.serialize()
-      }, (err) => {
-        throw new NotFoundException('business product', err.message)
-      }
-    )
-  }
-
-  async getBySlug(slug: string) {
-    return BusinessProduct.query().preload('business')
-      .where('slug', slug)
       .firstOrFail()
       .then((res) => {
         return res.serialize()
