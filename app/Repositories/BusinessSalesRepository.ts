@@ -54,7 +54,7 @@ export default class BusinessSalesRepository {
     if(q){
       queryModel
         .where('customer_name', 'LIKE', `%${q}%`)
-        .orWhere('remakrs', 'LIKE', `%${q}%`)
+        .orWhere('remarks', 'LIKE', `%${q}%`)
     }
 
     if(businessId){
