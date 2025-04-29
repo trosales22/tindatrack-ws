@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { BaseModel, beforeCreate, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import GeneralConstants from 'App/Constants/GeneralConstants'
 import Business from './Business'
+import BusinessProduct from './BusinessProduct'
 
 export default class BusinessSales extends BaseModel {
   public static table = 'business_sales'
@@ -22,9 +23,6 @@ export default class BusinessSales extends BaseModel {
 
   @column({ serializeAs: 'business_id', columnName: 'business_id' })
   public businessId: string;
-
-  @column({ serializeAs: 'refno', columnName: 'refno' })
-  public refno: string;
 
   @column({ serializeAs: 'product_id', columnName: 'product_id' })
   public productId: string;
@@ -85,4 +83,10 @@ export default class BusinessSales extends BaseModel {
     foreignKey: 'businessId'
   })
   public business: BelongsTo<typeof Business>
+
+  @belongsTo(() => BusinessProduct, {
+      localKey: 'uuid',
+      foreignKey: 'productId'
+    })
+    public product: BelongsTo<typeof BusinessProduct>
 }

@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { BaseModel, beforeCreate, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import GeneralConstants from 'App/Constants/GeneralConstants'
 import Business from './Business'
+import BusinessProduct from './BusinessProduct'
 
 export default class BusinessInventory extends BaseModel {
   public static table = 'business_inventories'
@@ -65,4 +66,10 @@ export default class BusinessInventory extends BaseModel {
     foreignKey: 'businessId'
   })
   public business: BelongsTo<typeof Business>
+
+  @belongsTo(() => BusinessProduct, {
+    localKey: 'uuid',
+    foreignKey: 'productId'
+  })
+  public product: BelongsTo<typeof BusinessProduct>
 }

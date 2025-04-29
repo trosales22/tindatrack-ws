@@ -27,6 +27,17 @@ export default class ProductInventoryRepository {
     )
   }
 
+  async decrementByProductId(productId: string, quantity: number) {
+    return await BusinessInventory.query().where('product_id', productId).decrement('stock', quantity).then(
+      (response) => {
+        return response
+      },
+      (error) => {
+        throw new UpdateException('inventory', error.message)
+      }
+    )
+  }
+
   async updateOrCreate(source, attributes){
     return await BusinessInventory.updateOrCreate(source, attributes).then(
       (created) => {

@@ -93,17 +93,6 @@ export default class GeneralConstants {
     [this.PRODUCT_CATEGORIES.OTHERS]: 'Others'
   }
 
-  public static BUSINESS_INVESTMENT_TYPES = {
-    CAPITAL: 'capital',
-    RAW_MATERIALS: 'raw_materials'
-  }
-
-  public static BUSINESS_INVESTMENT_SOURCE_TYPES = {
-    PERSONAL: 'personal',
-    LOAN: 'loan',
-    SUPPLIER: 'supplier'
-  }
-
   public static MONTH_NAMES = {
     1: 'January',
     2: 'February',

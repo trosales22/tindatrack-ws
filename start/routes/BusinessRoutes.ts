@@ -1,6 +1,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 import BusinessController from 'App/Controllers/BusinessController'
 import BusinessProductController from 'App/Controllers/BusinessProductController'
+import BusinessSalesController from 'App/Controllers/BusinessSalesHistoryController'
 import ProductInventoryController from 'App/Controllers/ProductInventoryController'
 
 export const BusinessRoutes = () => {
@@ -19,7 +20,13 @@ export const BusinessRoutes = () => {
       Route.delete('/:product_id', async (ctx) => { return new BusinessProductController().destroy(ctx) })
 
       Route.post('/:product_id/inventory/manage', async (ctx) => { return new ProductInventoryController().manage(ctx) })
-
     }).prefix('/:id/products')
+
+    Route.group(() => {
+      Route.get('/', async (ctx) => { return new BusinessSalesController().index(ctx) })
+      Route.get('/:sales_id', async (ctx) => { return new BusinessSalesController().show(ctx) })
+      Route.post('/', async (ctx) => { return new BusinessSalesController().store(ctx) })
+      Route.put('/:sales_id', async (ctx) => { return new BusinessSalesController().update(ctx) })
+    }).prefix('/:id/sales')
   }).prefix('businesses').middleware('auth:api')
 }

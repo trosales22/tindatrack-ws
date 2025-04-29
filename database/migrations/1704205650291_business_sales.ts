@@ -8,7 +8,6 @@ export default class BusinessSalesSchema extends BaseSchema {
       table.increments('id').primary()
       table.uuid('uuid').notNullable().unique().index()
       table.uuid('business_id').notNullable().index()
-      table.string('refno').nullable().index()
       table.uuid('product_id').notNullable().index()
       table.decimal('cost_price', 10, 2).notNullable().defaultTo(0.0).index()
       table.integer('quantity').notNullable().defaultTo(0).index()
