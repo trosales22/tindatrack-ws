@@ -54,6 +54,9 @@ export default class BusinessSales extends BaseModel {
   @column({ serializeAs: 'remarks', columnName: 'remarks' })
   public remarks: string;
 
+  @column({ serializeAs: 'owner_id', columnName: 'owner_id' })
+  public ownerId: string;
+
   @column.dateTime({
     serializeAs: 'created_at',
     columnName: 'created_at',

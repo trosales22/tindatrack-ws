@@ -21,7 +21,7 @@ export default class BusinessSalesController {
   }
 
   // @ts-ignore
-  public async index({ auth, params, request, response, transform }: HttpContextContract) {
+  public async index({ params, request, response, transform }: HttpContextContract) {
     await request.validate(ListBusinessSalesRequest)
 
     const list = await this.businessSalesRepo.getAll({
@@ -49,9 +49,10 @@ export default class BusinessSalesController {
     return response.json(serialized)
   }
 
-  public async store({ params, request, response }: HttpContextContract) {
+  public async store({ auth, params, request, response }: HttpContextContract) {
     await request.validate(CreateBusinessSalesRequest)
 
+    const userAuthData = auth.use('api').user!
     const businessUuid = params.id
     const sales = request.input('sales') ?? []
     const productIds = sales.map(s => s.product_id)
@@ -94,6 +95,7 @@ export default class BusinessSalesController {
         total_amount: costPrice * quantity,
         customer_name: sale.customer_name ?? null,
         remarks: sale.remarks ?? null,
+        owner_id: userAuthData.uuid
       })
 
       await this.productInventoryRepo.decrementByProductId(productId, quantity)

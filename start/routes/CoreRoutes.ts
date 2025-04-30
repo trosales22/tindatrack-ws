@@ -1,6 +1,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 import AuthController from 'App/Controllers/AuthController'
 import { BusinessRoutes } from './BusinessRoutes'
+import { DashboardRoutes } from './DashboardRoutes'
 
 export const CoreRoutes = () => [
   Route.group(() => {
@@ -13,5 +14,6 @@ export const CoreRoutes = () => [
     Route.post('business_admin/register', async (ctx) => {return new AuthController().businessAdminStore(ctx)})
 
     BusinessRoutes()
+    DashboardRoutes()
   }).prefix('core')
 ]

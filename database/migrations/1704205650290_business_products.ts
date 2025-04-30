@@ -14,6 +14,7 @@ export default class BusinessProductsSchema extends BaseSchema {
       table.decimal('unit_price', 10, 2).notNullable().defaultTo(0.0).index()
       table.decimal('cost_price', 10, 2).notNullable().defaultTo(0.0).index()
       table.string('status').nullable().defaultTo(GeneralConstants.GENERAL_STATUS_TYPES.ACTIVE).index()
+      table.uuid('creator_uuid').nullable().index()
       table.dateTime('created_at', { useTz: true }).notNullable()
       table.dateTime('updated_at', { useTz: true }).nullable()
       table.index(['created_at', 'updated_at'])

@@ -50,8 +50,11 @@ export default class BusinessProductController {
   public async store({ auth, params, request, response, transform }: HttpContextContract) {
     await request.validate(CreateBusinessProductRequest)
 
+    const userAuthData = auth.use('api').user!
+
     let payload = request.only(['name', 'category', 'unit_price', 'cost_price', 'status'])
     payload['business_id'] = params.id
+    payload['owner_id'] = userAuthData.uuid
 
     const created = await this.businessProductRepo.add(payload)
     const productId = created.uuid

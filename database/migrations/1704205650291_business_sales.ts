@@ -14,6 +14,7 @@ export default class BusinessSalesSchema extends BaseSchema {
       table.decimal('total_amount', 10, 2).notNullable().defaultTo(0.0).index()
       table.string('customer_name').nullable().index()
       table.string('remarks').nullable()
+      table.uuid('creator_uuid').nullable().index()
       table.dateTime('created_at', { useTz: true }).notNullable()
       table.dateTime('updated_at', { useTz: true }).nullable()
       table.index(['created_at', 'updated_at'])
