@@ -55,7 +55,7 @@ export default class BusinessSalesController {
     const businessUuid = params.id
     const sales = request.input('sales') ?? []
     const productIds = sales.map(s => s.product_id)
-    const products = await BusinessProduct.query().whereIn('uuid', productIds)
+    const products = await BusinessProduct.query().whereIn('uuid', productIds).preload('inventory')
     const productMap = products.reduce((acc, product) => {
       acc[product.uuid] = product
       return acc
@@ -70,11 +70,20 @@ export default class BusinessSalesController {
       if (!product) {
         return response.badRequest({
           code: 400,
-          message: `Product with ID ${sale.product_id} not found.`,
+          message: `Product not found for sale entry. Please check your inputs.`
         })
       }
 
+      const productRemainingStock: number = product?.inventory?.stock || 0
       const quantity: number = sale?.quantity || 0
+
+      if (productRemainingStock < quantity) {
+        return response.badRequest({
+          code: 400,
+          message: `Not enough stock for "${product.name}". Remaining: ${productRemainingStock}, Requested: ${quantity}.`
+        })
+      }
+
       const costPrice: number = product?.costPrice || 0.0
 
       payload.push({
